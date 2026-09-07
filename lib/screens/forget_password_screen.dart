@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 
+import '../services/auth_service.dart';
+
 class AppColors {
   static const Color background = Color(0xFF121312);
   static const Color primary = Color(0xFFF6BD00);
@@ -26,7 +28,34 @@ class _ForgetPasswordScreenState extends State<ForgetPasswordScreen> {
     super.dispose();
   }
 
-  void _verifyEmail() {}
+  bool _isLoading = false;
+  final AuthService _authService = AuthService();
+
+  Future<void> _verifyEmail() async {
+    if (_emailController.text.trim().isEmpty) {
+      _showMessage('Please enter your email.');
+      return;
+    }
+    setState(() => _isLoading = true);
+    try {
+      await _authService.sendPasswordResetEmail(
+        email: _emailController.text,
+      );
+      if (!mounted) return;
+      _showMessage('A reset link has been sent to your email.');
+      Navigator.of(context).maybePop();
+    } catch (e) {
+      _showMessage(AuthService.messageFor(e));
+    } finally {
+      if (mounted) setState(() => _isLoading = false);
+    }
+  }
+
+  void _showMessage(String message) {
+    ScaffoldMessenger.of(context).showSnackBar(
+      SnackBar(content: Text(message)),
+    );
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -92,7 +121,7 @@ class _ForgetPasswordScreenState extends State<ForgetPasswordScreen> {
               SizedBox(
                 height: 56,
                 child: ElevatedButton(
-                  onPressed: _verifyEmail,
+                  onPressed: _isLoading ? null : _verifyEmail,
                   style: ElevatedButton.styleFrom(
                     backgroundColor: AppColors.primary,
                     foregroundColor: Colors.black,
@@ -101,13 +130,22 @@ class _ForgetPasswordScreenState extends State<ForgetPasswordScreen> {
                       borderRadius: BorderRadius.circular(15),
                     ),
                   ),
-                  child: const Text(
-                    'Verify Email',
-                    style: TextStyle(
-                      fontWeight: FontWeight.bold,
-                      fontSize: 16,
-                    ),
-                  ),
+                  child: _isLoading
+                      ? const SizedBox(
+                          width: 22,
+                          height: 22,
+                          child: CircularProgressIndicator(
+                            strokeWidth: 2.5,
+                            color: Colors.black,
+                          ),
+                        )
+                      : const Text(
+                          'Verify Email',
+                          style: TextStyle(
+                            fontWeight: FontWeight.bold,
+                            fontSize: 16,
+                          ),
+                        ),
                 ),
               ),
 
