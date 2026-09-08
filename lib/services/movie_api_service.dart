@@ -1,21 +1,24 @@
-import 'dart:convert';
-import 'package:http/http.dart' as http;
+import 'package:dio/dio.dart';
 
 class MovieApiService {
   static const String apiKey = '8d34aff24549adbdbe9baf374d04de19';
   static const String baseUrl = 'https://api.themoviedb.org/3';
   static const String imageBaseUrl = 'https://image.tmdb.org/t/p/w500';
 
+  final Dio _dio = Dio();
+
   Future<List<dynamic>> getPopularMovies() async {
-    final url = Uri.parse(
-      '$baseUrl/movie/popular?api_key=$apiKey&language=en-US&page=1',
+    final response = await _dio.get(
+      '$baseUrl/movie/popular',
+      queryParameters: {
+        'api_key': apiKey,
+        'language': 'en-US',
+        'page': 1,
+      },
     );
 
-    final response = await http.get(url);
-
     if (response.statusCode == 200) {
-      final data = jsonDecode(response.body);
-      return data['results'] ?? [];
+      return response.data['results'] ?? [];
     }
 
     throw Exception('Failed to load popular movies');
@@ -51,15 +54,18 @@ class MovieApiService {
         return getPopularMovies();
     }
 
-    final url = Uri.parse(
-      '$baseUrl/discover/movie?with_genres=$genreId&api_key=$apiKey&language=en-US&page=1',
+    final response = await _dio.get(
+      '$baseUrl/discover/movie',
+      queryParameters: {
+        'with_genres': genreId,
+        'api_key': apiKey,
+        'language': 'en-US',
+        'page': 1,
+      },
     );
 
-    final response = await http.get(url);
-
     if (response.statusCode == 200) {
-      final data = jsonDecode(response.body);
-      return data['results'] ?? [];
+      return response.data['results'] ?? [];
     }
 
     throw Exception('Failed to load movies');
@@ -71,40 +77,41 @@ class MovieApiService {
     }
 
     return '$imageBaseUrl$posterPath';
-  }Future<List<dynamic>> searchMovies(String query) async {
+  }
+
+  Future<List<dynamic>> searchMovies(String query) async {
     if (query.trim().isEmpty) {
       return [];
     }
 
-    final url = Uri.parse(
-      '$baseUrl/search/movie'
-          '?api_key=$apiKey'
-          '&language=en-US'
-          '&query=${Uri.encodeQueryComponent(query.trim())}'
-          '&page=1',
+    final response = await _dio.get(
+      '$baseUrl/search/movie',
+      queryParameters: {
+        'api_key': apiKey,
+        'language': 'en-US',
+        'query': query.trim(),
+        'page': 1,
+      },
     );
 
-    final response = await http.get(url);
-
     if (response.statusCode == 200) {
-      final data = jsonDecode(response.body);
-      return data['results'] ?? [];
+      return response.data['results'] ?? [];
     }
 
     throw Exception('Failed to search movies');
   }
 
   Future<dynamic> getMovieById(int movieId) async {
-    final url = Uri.parse(
-      '$baseUrl/movie/$movieId'
-          '?api_key=$apiKey'
-          '&language=en-US',
+    final response = await _dio.get(
+      '$baseUrl/movie/$movieId',
+      queryParameters: {
+        'api_key': apiKey,
+        'language': 'en-US',
+      },
     );
 
-    final response = await http.get(url);
-
     if (response.statusCode == 200) {
-      return jsonDecode(response.body);
+      return response.data;
     }
 
     throw Exception('Failed to load movie');
