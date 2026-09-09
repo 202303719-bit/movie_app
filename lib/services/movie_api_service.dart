@@ -1,75 +1,45 @@
 import 'dart:convert';
 import 'package:http/http.dart' as http;
+import '../models/movie.dart';
 
 class MovieApiService {
-  static const String apiKey = '8d34aff24549adbdbe9baf374d04de19';
-  static const String baseUrl = 'https://api.themoviedb.org/3';
-  static const String imageBaseUrl = 'https://image.tmdb.org/t/p/w500';
+  static const String baseUrl = 'https://movies-api.accel.li/api/v2';
 
-  Future<List<dynamic>> getPopularMovies() async {
+  Future<List<Movie>> getPopularMovies() async {
     final url = Uri.parse(
-      '$baseUrl/movie/popular?api_key=$apiKey&language=en-US&page=1',
+      '$baseUrl/list_movies.json?sort_by=rating&order_by=desc&limit=20',
     );
 
     final response = await http.get(url);
 
     if (response.statusCode == 200) {
       final data = jsonDecode(response.body);
-      return data['results'] ?? [];
-    }
+      final movies = data['data']?['movies'] as List? ?? [];
 
-    throw Exception('Failed to load popular movies');
-  }
-
-  Future<List<dynamic>> getMoviesByCategory(String category) async {
-    String genreId;
-
-    switch (category.toLowerCase()) {
-      case 'action':
-        genreId = '28';
-        break;
-      case 'adventure':
-        genreId = '12';
-        break;
-      case 'animation':
-        genreId = '16';
-        break;
-      case 'comedy':
-        genreId = '35';
-        break;
-      case 'drama':
-        genreId = '18';
-        break;
-      case 'horror':
-        genreId = '27';
-        break;
-      case 'science fiction':
-      case 'sci-fi':
-        genreId = '878';
-        break;
-      default:
-        return getPopularMovies();
-    }
-
-    final url = Uri.parse(
-      '$baseUrl/discover/movie?with_genres=$genreId&api_key=$apiKey&language=en-US&page=1',
-    );
-
-    final response = await http.get(url);
-
-    if (response.statusCode == 200) {
-      final data = jsonDecode(response.body);
-      return data['results'] ?? [];
+      return movies
+          .map((movie) => Movie.fromJson(movie))
+          .toList();
     }
 
     throw Exception('Failed to load movies');
   }
 
-  String getPosterUrl(String? posterPath) {
-    if (posterPath == null || posterPath.isEmpty) {
-      return '';
+  Future<List<Movie>> getMoviesByCategory(String category) async {
+    final url = Uri.parse(
+      '$baseUrl/list_movies.json?genre=${Uri.encodeComponent(category)}&limit=20',
+    );
+
+    final response = await http.get(url);
+
+    if (response.statusCode == 200) {
+      final data = jsonDecode(response.body);
+      final movies = data['data']?['movies'] as List? ?? [];
+
+      return movies
+          .map((movie) => Movie.fromJson(movie))
+          .toList();
     }
 
-    return '$imageBaseUrl$posterPath';
+    throw Exception('Failed to load movies');
   }
 }
