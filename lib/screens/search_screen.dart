@@ -168,7 +168,7 @@ class _MovieCard extends StatelessWidget {
               movie.mediumCoverImage,
               width: double.infinity,
               fit: BoxFit.cover,
-              errorBuilder: (_, __, ___) {
+              errorBuilder: (context, error, stackTrace) {
                 return const Center(
                   child: Icon(Icons.movie),
                 );

@@ -1,8 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:firebase_core/firebase_core.dart';
-import 'package:m/screens/home_screen.dart';
 import 'screens/onboarding_screen.dart';
-import 'package:m/screens/update_profile_screen.dart';
 import 'firebase_options.dart';
 
 void main() async {

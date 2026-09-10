@@ -439,7 +439,7 @@ class _AvatarGrid extends StatelessWidget {
                 width: isSelected ? 2.5 : 1,
               ),
               color: isSelected
-                  ? AppColors.primary.withOpacity(0.15)
+                  ? AppColors.primary.withAlpha((255 * 0.15).toInt())
                   : Colors.transparent,
             ),
             padding: const EdgeInsets.all(4),
@@ -461,16 +461,12 @@ class _AuthTextField extends StatelessWidget {
   final TextEditingController controller;
   final String hintText;
   final IconData icon;
-  final bool obscureText;
-  final Widget? suffixIcon;
   final TextInputType? keyboardType;
 
   const _AuthTextField({
     required this.controller,
     required this.hintText,
     required this.icon,
-    this.obscureText = false,
-    this.suffixIcon,
     this.keyboardType,
   });
 
@@ -480,7 +476,6 @@ class _AuthTextField extends StatelessWidget {
       height: 56,
       child: TextField(
         controller: controller,
-        obscureText: obscureText,
         keyboardType: keyboardType,
         style: const TextStyle(
           color: AppColors.textWhite,
@@ -500,7 +495,6 @@ class _AuthTextField extends StatelessWidget {
             color: AppColors.textWhite,
             size: 20,
           ),
-          suffixIcon: suffixIcon,
           contentPadding: const EdgeInsets.symmetric(vertical: 16),
           border: OutlineInputBorder(
             borderRadius: BorderRadius.circular(15),

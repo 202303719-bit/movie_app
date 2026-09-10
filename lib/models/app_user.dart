@@ -4,6 +4,8 @@ class AppUser {
   final String email;
   final String phone;
   final String avatar; // asset path or URL, e.g. 'assets/images/avatar_1.png'
+  final List<int> favorites;
+  final List<int> watchedMovies;
 
   AppUser({
     required this.uid,
@@ -11,6 +13,8 @@ class AppUser {
     required this.email,
     required this.phone,
     required this.avatar,
+    this.favorites = const [],
+    this.watchedMovies = const [],
   });
 
   factory AppUser.fromMap(String uid, Map<String, dynamic> map) {
@@ -20,6 +24,8 @@ class AppUser {
       email: map['email'] ?? '',
       phone: map['phone'] ?? '',
       avatar: map['avatar'] ?? 'assets/images/avatar_1.png',
+      favorites: (map['favorites'] as List?)?.cast<int>() ?? [],
+      watchedMovies: (map['watchedMovies'] as List?)?.cast<int>() ?? [],
     );
   }
 
@@ -29,6 +35,8 @@ class AppUser {
       'email': email,
       'phone': phone,
       'avatar': avatar,
+      'favorites': favorites,
+      'watchedMovies': watchedMovies,
     };
   }
 
@@ -37,6 +45,8 @@ class AppUser {
     String? email,
     String? phone,
     String? avatar,
+    List<int>? favorites,
+    List<int>? watchedMovies,
   }) {
     return AppUser(
       uid: uid,
@@ -44,6 +54,8 @@ class AppUser {
       email: email ?? this.email,
       phone: phone ?? this.phone,
       avatar: avatar ?? this.avatar,
+      favorites: favorites ?? this.favorites,
+      watchedMovies: watchedMovies ?? this.watchedMovies,
     );
   }
 }

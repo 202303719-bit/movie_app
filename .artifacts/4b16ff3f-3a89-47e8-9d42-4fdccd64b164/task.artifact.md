@@ -1,7 +1,9 @@
-- [x] Move BLoC files to `lib/blocs/`
-    - [x] Browse BLoC
-    - [x] Profile BLoC
-    - [x] Search BLoC
-- [x] Move `yts_api_service.dart` to `lib/services/`
-- [x] Verify imports and analyze files in new locations
-- [x] Clean up redundant `Movie_Updated_FLUTTER_READY` folder
+- [x] Fix `AppUser` model errors
+    - [x] Add `favorites` and `watchedMovies` to `AppUser`
+    - [x] Update `fromMap`, `toMap`, `copyWith`
+- [x] Clean up `main.dart` unused imports
+- [x] Clean up `forget_password_screen.dart` unused parameters
+- [x] Clean up `update_profile_screen.dart` warnings
+- [x] Fix `search_screen.dart` info level issues
+- [x] Verify all fixes with `analyze_file`
+- [ ] Push changes to GitHub

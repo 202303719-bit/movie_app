@@ -1,36 +1,39 @@
-# Implementation Plan - Fix Project Errors and Structure
+# Implementation Plan - Fix AppUser Errors and UI Warnings
 
-The project currently has a duplicated and misplaced structure in `Movie_Updated_FLUTTER_READY/lib/`. The files within this directory have broken relative imports because they are not located in the expected package root (`lib/`).
+The project has several compilation errors due to missing fields in the `AppUser` model that `ProfileBloc` expects. Additionally, there are several UI warnings related to unused imports, parameters, and deprecated APIs.
 
 ## Proposed Changes
 
-### [Component: Project Structure]
+### [Component: Data Models]
 
-I will move the missing components from the temporary folder to the main project structure and clean up the redundancy.
+#### [MODIFY] [app_user.dart](file:///D:/تجربههه/lib/models/app_user.dart)
+- Add `favorites` and `watchedMovies` fields (List of int).
+- Update `fromMap`, `toMap`, and `copyWith` to handle these fields.
 
-#### [MOVE] `Movie_Updated_FLUTTER_READY/lib/blocs/` -> [lib/blocs/](file:///D:/تجربههه/lib/blocs/)
-#### [MOVE] `Movie_Updated_FLUTTER_READY/lib/services/yts_api_service.dart` -> [lib/services/yts_api_service.dart](file:///D:/تجربههه/lib/services/yts_api_service.dart)
-#### [DELETE] `Movie_Updated_FLUTTER_READY/`
-
-### [Component: Fix Imports and Types]
-
-After moving the files, I will verify the imports and fix any remaining type errors.
-
-#### [MODIFY] [browse_bloc.dart](file:///D:/تجربههه/lib/blocs/browse/browse_bloc.dart)
-- Verify `../../models/movie.dart` resolves correctly.
-- Fix null safety issue with `movie.genres`.
+### [Component: Profile Logic]
 
 #### [MODIFY] [profile_bloc.dart](file:///D:/تجربههه/lib/blocs/profile/profile_bloc.dart)
-- Verify `../../services/firestore_service.dart` resolves correctly.
+- No changes needed here, as updating `AppUser` will resolve the getter errors.
 
-#### [MODIFY] [yts_api_service.dart](file:///D:/تجربههه/lib/services/yts_api_service.dart)
-- Verify `../models/movie.dart` resolves correctly.
+### [Component: UI & Cleanup]
+
+#### [MODIFY] [main.dart](file:///D:/تجربههه/lib/main.dart)
+- Remove unused imports (`home_screen.dart`, `update_profile_screen.dart`).
+
+#### [MODIFY] [forget_password_screen.dart](file:///D:/تجربههه/lib/screens/forget_password_screen.dart)
+- Remove unused parameters (`obscureText`, `suffixIcon`) from the private `_AuthTextField` component as they are not used within this screen.
+
+#### [MODIFY] [update_profile_screen.dart](file:///D:/تجربههه/lib/screens/update_profile_screen.dart)
+- Replace deprecated `withOpacity(0.15)` with `withAlpha((255 * 0.15).toInt())` or similar to resolve the warning.
+- Remove unused parameters from the private `_AuthTextField`.
+
+#### [MODIFY] [search_screen.dart](file:///D:/تجربههه/lib/screens/search_screen.dart)
+- Fix `unnecessary_underscores` info by using a single underscore for unused arguments in `errorBuilder`.
 
 ## Verification Plan
 
 ### Automated Tests
-- Run `analyze_file` on all moved files to ensure no more errors exist.
-- Run `flutter analyze` (via shell) if possible to check the entire project.
+- Run `analyze_file` on all modified files to ensure all errors and warnings are resolved.
 
 ### Manual Verification
-- Check the `lib/` directory structure to ensure it matches the standard Flutter layout.
+- Verify that the Profile screen loads correctly (if testing on a device is possible).
