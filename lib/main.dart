@@ -22,3 +22,9 @@ class MyApp extends StatelessWidget {
     );
   }
 }
+
+
+// new commit 
+// فين الفولدر اللي فيه الكود؟
+// lib/main.dart
+// /Users/apple/Documents/GitHub/movie_app/lib/main.dart
