@@ -1,0 +1,7 @@
+- [x] Move BLoC files to `lib/blocs/`
+    - [x] Browse BLoC
+    - [x] Profile BLoC
+    - [x] Search BLoC
+- [x] Move `yts_api_service.dart` to `lib/services/`
+- [x] Verify imports and analyze files in new locations
+- [x] Clean up redundant `Movie_Updated_FLUTTER_READY` folder
